@@ -1,0 +1,170 @@
+{
+  "entities": {
+    "Tour": {
+      "title": "Tour",
+      "description": "A tour package listing",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "category": { "type": "string", "enum": ["Domestic", "International"] },
+        "destination": { "type": "string" },
+        "bannerImage": { "type": "string" },
+        "shortDescription": { "type": "string" },
+        "highlights": { "type": "array", "items": { "type": "string" } },
+        "tourHighlights": { "type": "array", "items": { "type": "string" } },
+        "cost": { "type": "string" },
+        "duration": { "type": "string" },
+        "bestTimeToVisit": { "type": "string" },
+        "gallery": { "type": "array", "items": { "type": "string" } },
+        "isActive": { "type": "boolean" }
+      },
+      "required": ["id", "category", "destination", "bannerImage", "shortDescription", "isActive"]
+    },
+    "VisaService": {
+      "title": "Visa Service",
+      "description": "A visa assistance service",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "country": { "type": "string" },
+        "description": { "type": "string" },
+        "image": { "type": "string" },
+        "requirements": { "type": "array", "items": { "type": "string" } },
+        "isActive": { "type": "boolean" }
+      },
+      "required": ["id", "type", "country", "description", "isActive"]
+    },
+    "Inquiry": {
+      "title": "Inquiry",
+      "description": "A customer inquiry",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "fullName": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "message": { "type": "string" },
+        "subject": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "status": { "type": "string", "enum": ["new", "contacted", "closed"] }
+      },
+      "required": ["id", "fullName", "email", "phone", "subject", "createdAt", "status"]
+    },
+    "Testimonial": {
+      "title": "Testimonial",
+      "description": "A customer testimonial",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "customerName": { "type": "string" },
+        "rating": { "type": "number" },
+        "feedback": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "customerName", "rating", "feedback", "status", "createdAt"]
+    },
+    "JobOpening": {
+      "title": "Job Opening",
+      "description": "A career opportunity",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "location": { "type": "string" },
+        "type": { "type": "string", "enum": ["Full-time", "Part-time", "Contract", "Internship"] },
+        "description": { "type": "string" },
+        "requirements": { "type": "array", "items": { "type": "string" } },
+        "isActive": { "type": "boolean" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "title", "location", "type", "description", "isActive", "createdAt"]
+    },
+    "JobApplication": {
+      "title": "Job Application",
+      "description": "A job application submission",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "jobId": { "type": "string" },
+        "jobTitle": { "type": "string" },
+        "fullName": { "type": "string" },
+        "email": { "type": "string" },
+        "phone": { "type": "string" },
+        "portfolioUrl": { "type": "string" },
+        "resumeText": { "type": "string" },
+        "status": { "type": "string", "enum": ["new", "reviewed", "accepted", "rejected"] },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "jobId", "jobTitle", "fullName", "email", "phone", "resumeText", "status", "createdAt"]
+    },
+    "SiteSettings": {
+      "title": "Site Settings",
+      "description": "Global application settings",
+      "type": "object",
+      "properties": {
+        "contactEmail": { "type": "string" },
+        "contactPhone": { "type": "string" },
+        "address": { "type": "string" },
+        "logo": { "type": "string" },
+        "heroBadge": { "type": "string" },
+        "heroTitle": { "type": "string" },
+        "heroSubtitle": { "type": "string" },
+        "heroBannerImage": { "type": "string" },
+        "heroPrimaryBtnText": { "type": "string" },
+        "heroPrimaryBtnLink": { "type": "string" },
+        "heroSecondaryBtnText": { "type": "string" },
+        "heroSecondaryBtnLink": { "type": "string" },
+        "domesticListingBanner": { "type": "string" },
+        "internationalListingBanner": { "type": "string" },
+        "statsValue": { "type": "string" },
+        "statsLabel": { "type": "string" },
+        "showStatsCard": { "type": "boolean" },
+        "featuredToursHeading": { "type": "string" },
+        "featuredToursSubheading": { "type": "string" },
+        "testimonialsHeading": { "type": "string" },
+        "testimonialsSubheading": { "type": "string" },
+        "testimonialSectionImage": { "type": "string" },
+        "showFeaturedTours": { "type": "boolean" },
+        "showTestimonials": { "type": "boolean" },
+        "showCtaSection": { "type": "boolean" },
+        "facebookUrl": { "type": "string" },
+        "instagramUrl": { "type": "string" },
+        "twitterUrl": { "type": "string" },
+        "termsOfService": { "type": "string" },
+        "privacyPolicy": { "type": "string" }
+      }
+    }
+  },
+  "firestore": {
+    "/tours/{tourId}": {
+      "schema": "Tour",
+      "description": "Tour packages"
+    },
+    "/visas/{visaId}": {
+      "schema": "VisaService",
+      "description": "Visa services"
+    },
+    "/inquiries/{inquiryId}": {
+      "schema": "Inquiry",
+      "description": "Customer inquiries"
+    },
+    "/testimonials/{testimonialId}": {
+      "schema": "Testimonial",
+      "description": "Customer testimonials"
+    },
+    "/jobs/{jobId}": {
+      "schema": "JobOpening",
+      "description": "Career openings"
+    },
+    "/applications/{applicationId}": {
+      "schema": "JobApplication",
+      "description": "Job applications"
+    },
+    "/settings/global": {
+      "schema": "SiteSettings",
+      "description": "Global site settings"
+    }
+  }
+}

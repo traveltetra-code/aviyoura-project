@@ -1,0 +1,151 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: settings
+    // Document ID: global
+    // Fields: contactEmail, contactPhone, address, logo, heroBadge, heroTitle, etc.
+    //
+    // Collection: tours
+    // Document ID: auto-generated
+    // Fields: id, category, destination, bannerImage, shortDescription, highlights, tourHighlights, cost, duration, bestTimeToVisit, gallery, isActive
+    //
+    // Collection: visas
+    // Document ID: auto-generated
+    // Fields: id, type, country, description, image, requirements, isActive
+    //
+    // Collection: inquiries
+    // Document ID: auto-generated
+    // Fields: id, fullName, email, phone, message, subject, createdAt, status
+    //
+    // Collection: testimonials
+    // Document ID: auto-generated
+    // Fields: id, customerName, rating, feedback, status, createdAt
+    //
+    // Collection: jobs
+    // Document ID: auto-generated
+    // Fields: id, title, location, type, description, requirements, isActive, createdAt
+    //
+    // Collection: applications
+    // Document ID: auto-generated
+    // Fields: id, jobId, jobTitle, fullName, email, phone, portfolioUrl, resumeText, status, createdAt
+    //
+    // Collection: users
+    // Document ID: uid
+    // Fields: email, role, name
+    //
+    // ===============================================================
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+          (request.auth.token.email == "traveltetra@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function isValidUrl(url) {
+      return url is string && (url.matches("^https://.*") || url.matches("^http://.*") || url == "");
+    }
+
+    function isValidString(val, min, max) {
+      return val is string && val.size() >= min && val.size() <= max;
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    function isValidTour(data) {
+      return data.keys().hasAll(['category', 'destination', 'bannerImage', 'shortDescription', 'isActive']) &&
+             data.category in ['Domestic', 'International'] &&
+             isValidString(data.destination, 1, 100) &&
+             isValidUrl(data.bannerImage) &&
+             isValidString(data.shortDescription, 1, 1000) &&
+             data.isActive is bool;
+    }
+
+    function isValidInquiry(data) {
+      return data.keys().hasAll(['fullName', 'email', 'phone', 'subject', 'createdAt', 'status']) &&
+             isValidString(data.fullName, 1, 100) &&
+             isValidEmail(data.email) &&
+             isValidString(data.phone, 5, 20) &&
+             isValidString(data.subject, 1, 200) &&
+             data.status in ['new', 'contacted', 'closed'];
+    }
+
+    function isValidTestimonial(data) {
+      return data.keys().hasAll(['customerName', 'rating', 'feedback', 'status', 'createdAt']) &&
+             isValidString(data.customerName, 1, 100) &&
+             data.rating is number && data.rating >= 1 && data.rating <= 5 &&
+             isValidString(data.feedback, 1, 1000) &&
+             data.status in ['pending', 'approved', 'rejected'];
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    match /settings/global {
+      allow read: if true; // Publicly readable for site config
+      allow write: if isAdmin();
+    }
+
+    match /tours/{tourId} {
+      allow read: if true; // Publicly readable
+      allow write: if isAdmin();
+    }
+
+    match /visas/{visaId} {
+      allow read: if true; // Publicly readable
+      allow write: if isAdmin();
+    }
+
+    match /inquiries/{inquiryId} {
+      allow read: if isAdmin();
+      allow create: if isValidInquiry(request.resource.data);
+      allow update, delete: if isAdmin();
+    }
+
+    match /testimonials/{testimonialId} {
+      allow read: if true; // Publicly readable (app filters by approved status)
+      allow create: if isValidTestimonial(request.resource.data) && request.resource.data.status == 'pending';
+      allow update, delete: if isAdmin();
+    }
+
+    match /jobs/{jobId} {
+      allow read: if true; // Publicly readable
+      allow write: if isAdmin();
+    }
+
+    match /applications/{applicationId} {
+      allow read: if isAdmin();
+      allow create: if isAuthenticated(); // Or public if needed, but let's require auth for now
+      allow update, delete: if isAdmin();
+    }
+
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      allow create: if isAuthenticated() && request.auth.uid == userId && request.resource.data.role == 'user';
+      allow update: if isAdmin();
+    }
+  }
+}

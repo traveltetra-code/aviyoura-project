@@ -1,0 +1,8 @@
+{
+  "name": "AVIYOURA SYNC AND CHANGES MODE",
+  "description": "AVIYOURA - Premium Travel Concierge. Expertly curated domestic and international tours with seamless visa assistance. (Ready to Sync)",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
