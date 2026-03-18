@@ -1,4 +1,4 @@
-![AVIOURA Logo](https://files.fm/u/8rkzxfs97a)
+![AVIOURA Logo](https://files.fm/f/bkdna8g3xb)
 
 # AVIYOURA
 
