@@ -30,7 +30,7 @@ const Navbar: React.FC = () => {
     { name: 'International Tours', path: '/tours/international' },
     { name: 'Visa Services', path: '/visa-services' },
     { name: 'About Us', path: '/about' },
-    { name: 'About Us', path: '/hotels' },
+    { name: 'Hotels', path: '/hotels' },
     { name: 'Contact Us', path: '/contact' },
   ];
 
