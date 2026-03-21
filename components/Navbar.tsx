@@ -29,8 +29,9 @@ const Navbar: React.FC = () => {
     { name: 'Domestic Tours', path: '/tours/domestic' },
     { name: 'International Tours', path: '/tours/international' },
     { name: 'Visa Services', path: '/visa-services' },
+    { name: 'Flights', path: '/flights' },
+    { name: 'Hotels', path: '/Hotels' },
     { name: 'About Us', path: '/about' },
-    { name: 'Hotels', path: '/hotels' },
     { name: 'Contact Us', path: '/contact' },
   ];
 
